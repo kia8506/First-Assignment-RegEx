@@ -5,55 +5,72 @@ import java.util.regex.Pattern;
 
 public class Exercises {
 
-    /*
-        complete the method below, so it will validate an email address
-     */
     public boolean validateEmail(String email) {
-        String regex = ""; // todo
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
 
         return matcher.matches();
     }
 
-    /*
-        this method should find a date in string
-        note that it should be in british or american format
-        if there's no match for a date, return null
-     */
     public String findDate(String string) {
-        // todo
+        String reg = "\\b(\\d{2})/(\\d{2})/(\\d{4})\\b";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(string);
+
+        if (matcher.find())
+            return matcher.group();
+        
         return null;
     }
 
-    /*
-        given a string, implement the method to detect all valid passwords
-        then, it should return the count of them
-
-        a valid password has the following properties:
-        - at least 8 characters
-        - has to include at least one uppercase letter, and at least a lowercase
-        - at least one number and at least a special char "!@#$%^&*"
-        - has no white-space in it
-     */
     public int findValidPasswords(String string) {
-        // todo
-        return -1;
+        String reg = "(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,}";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(string);
+
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        if (count == 0)
+            return -1;
+        else
+            return count;
     }
 
-    /*
-        you should return a list of *words* which are palindromic
-        by word we mean at least 3 letters with no whitespace in it
-
-        note: your implementation should be case-insensitive, e.g. Aba -> is palindrome
-     */
     public List<String> findPalindromes(String string) {
         List<String> list = new ArrayList<>();
-        // todo
+        String reg = "\\b[a-zA-Z]{3,}\\b";
+        Pattern pattern = Pattern.compile(reg);
+        Matcher matcher = pattern.matcher(string);
+
+        while (matcher.find()) {
+            String word = matcher.group();
+            if (isPalindrome(word)) {
+                list.add(word);
+            }
+        }
         return list;
     }
 
+    // Private method to check if a word is a palindrome
+    private boolean isPalindrome(String word) {
+        String lower_word = word.toLowerCase();
+        return lower_word.equals(new StringBuilder(lower_word).reverse().toString());
+    }
+
     public static void main(String[] args) {
-        // you can test your code here
+        Exercises ex = new Exercises();
+
+        System.out.println(ex.validateEmail("kia@sheikhi.com")); // true
+        System.out.println(ex.validateEmail("komkomcerecre")); // false
+
+        System.out.println(ex.findDate("Today is 12/03/2025.")); // 12/03/2025
+        System.out.println(ex.findDate("Not any date here.")); // null
+
+        System.out.println(ex.findValidPasswords("Pass@word1 StrongP@ssword2 weakpass 12345678")); // 2
+
+        System.out.println(ex.findPalindromes("asa level noon racar test mkmos")); // [asa, level, noon, racar]
     }
 }
